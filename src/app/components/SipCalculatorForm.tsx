@@ -1,6 +1,10 @@
 import { useState } from 'react';
 
-const SipCalculatorForm = ({ calculateSip }) => {
+interface SipCalculatorFormProps {
+  calculateSip: (values: { monthlyInvestment: number; annualReturnRate: number; investmentDuration: number }) => void;
+}
+
+const SipCalculatorForm: React.FC<SipCalculatorFormProps> = ({ calculateSip }) => {
   const [formValues, setFormValues] = useState({
     monthlyInvestment: '',
     annualReturnRate: '',
@@ -14,23 +18,23 @@ const SipCalculatorForm = ({ calculateSip }) => {
   });
 
   const validate = () => {
-    let errors = {};
+    let errors: { [key: string]: string } = {};
 
     if (!formValues.monthlyInvestment) {
       errors.monthlyInvestment = 'Monthly investment is required';
-    } else if (formValues.monthlyInvestment <= 0) {
+    } else if (Number(formValues.monthlyInvestment) <= 0) {
       errors.monthlyInvestment = 'Monthly investment must be a positive number';
     }
 
     if (!formValues.annualReturnRate) {
       errors.annualReturnRate = 'Annual return rate is required';
-    } else if (formValues.annualReturnRate <= 0 || formValues.annualReturnRate > 100) {
+    } else if (Number(formValues.annualReturnRate) <= 0 || Number(formValues.annualReturnRate) > 100) {
       errors.annualReturnRate = 'Annual return rate must be between 0 and 100';
     }
 
     if (!formValues.investmentDuration) {
       errors.investmentDuration = 'Investment duration is required';
-    } else if (formValues.investmentDuration <= 0) {
+    } else if (Number(formValues.investmentDuration) <= 0) {
       errors.investmentDuration = 'Investment duration must be a positive number';
     }
 
@@ -38,7 +42,7 @@ const SipCalculatorForm = ({ calculateSip }) => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues({
       ...formValues,
@@ -46,10 +50,14 @@ const SipCalculatorForm = ({ calculateSip }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      calculateSip(formValues);
+      calculateSip({
+        monthlyInvestment: Number(formValues.monthlyInvestment),
+        annualReturnRate: Number(formValues.annualReturnRate),
+        investmentDuration: Number(formValues.investmentDuration)
+      });
     }
   };
 

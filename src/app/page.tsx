@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import SipCalculatorForm from './components/SipCalculatorForm';
 
-const calculateSip = ({ monthlyInvestment, annualReturnRate, investmentDuration }) => {
+const calculateSip = ({ monthlyInvestment, annualReturnRate, investmentDuration }: { monthlyInvestment: number; annualReturnRate: number; investmentDuration: number }) => {
   const monthlyRate = annualReturnRate / 100 / 12;
   const months = investmentDuration * 12;
   const futureValue = monthlyInvestment * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
@@ -11,9 +11,9 @@ const calculateSip = ({ monthlyInvestment, annualReturnRate, investmentDuration 
 };
 
 const Home = () => {
-  const [futureValue, setFutureValue] = useState(null);
+  const [futureValue, setFutureValue] = useState<string | null>(null);
 
-  const handleCalculateSip = values => {
+  const handleCalculateSip = (values: { monthlyInvestment: number; annualReturnRate: number; investmentDuration: number }) => {
     const calculatedFutureValue = calculateSip(values);
     setFutureValue(calculatedFutureValue);
   };
